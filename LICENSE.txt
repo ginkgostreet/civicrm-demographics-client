@@ -1,4 +1,4 @@
-Package: org.ginkgostreet.demographics.client
+Package: com.ginkgostreet.demographics.client
 Copyright (C) 2015, Tobias Lounsbury <tobiaslounsbury@gmail.com>
 Licensed under the GNU Affero Public License 3.0 (below).
 

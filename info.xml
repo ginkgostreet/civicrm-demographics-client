@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<extension key="org.ginkgostreet.demographics.client" type="module">
+<extension key="com.ginkgostreet.demographics.client" type="module">
   <file>client</file>
   <name>CiviCRM-Demographics-Client</name>
   <description>This extension sends demographics data to a server</description>
