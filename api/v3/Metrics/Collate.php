@@ -9,7 +9,6 @@
  * @see http://wiki.civicrm.org/confluence/display/CRM/API+Architecture+Standards
  */
 function _civicrm_api3_metrics_collate_spec(&$spec) {
-  $spec['magicword']['api.required'] = 1;
 }
 
 /**
@@ -22,19 +21,28 @@ function _civicrm_api3_metrics_collate_spec(&$spec) {
  * @throws API_Exception
  */
 function civicrm_api3_metrics_collate($params) {
-  if (array_key_exists('magicword', $params) && $params['magicword'] == 'sesame') {
-    $returnValues = array( // OK, return several data rows
-      12 => array('id' => 12, 'name' => 'Twelve'),
-      34 => array('id' => 34, 'name' => 'Thirty four'),
-      56 => array('id' => 56, 'name' => 'Fifty six'),
-    );
-    // ALTERNATIVE: $returnValues = array(); // OK, success
-    // ALTERNATIVE: $returnValues = array("Some value"); // OK, return a single value
 
-    // Spec: civicrm_api3_create_success($values = 1, $params = array(), $entity = NULL, $action = NULL)
-    return civicrm_api3_create_success($returnValues, $params, 'Metrics', 'collate');
-  } else {
-    throw new API_Exception(/*errorMessage*/ 'Everyone knows that the magicword is "sesame"', /*errorCode*/ 1234);
+  $data = array();
+  CRM_Metricclient_Hook::collateMetrics($data);
+  if (!empty($data)) {
+
+    $header = array();
+    $header['site_url'] = $_SERVER['SERVER_NAME'];
+    $metricSettings = CRM_Core_BAO_Setting::getItem("metrics");
+    $header['site_name'] = $metricSettings['metrics_site_name'];
+
+    $header['data'] = $data;
+
+    $curl = curl_init($metricSettings['metrics_reporting_url']);
+    curl_setopt($curl, CURLOPT_POST, true);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, array("json" => json_encode($header)));
+    $response = curl_exec($curl);
+
+
+    return civicrm_api3_create_success(count($data), $params, 'Metrics', 'collate');
   }
+
+  return civicrm_api3_create_success(0, $params, 'Metrics', 'collate');
 }
 
