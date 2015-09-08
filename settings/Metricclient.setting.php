@@ -8,7 +8,7 @@ return array(
     'group' => 'metrics',
     'name' => 'metrics_reporting_url',
     'type' => 'String',
-    'default' => '',
+    'default' => 'http://{sitedomain}/sites/all/modules/civicrm/extern/rest.php?entity=Metrics&action=report&api_key={userkey}&key={sitekey}',
     'add' => '4.4',
     'is_domain' => 1,
     'is_contact' => 0,
