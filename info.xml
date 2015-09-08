@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<extension key="org.ginkgostreet.demographics.client" type="module">
-  <file>client</file>
-  <name>CiviCRM-Demographics-Client</name>
+<extension key="com.ginkgostreet.metricclient" type="module">
+  <file>metricclient</file>
+  <name>CiviCRM-Metrics-Client</name>
   <description>This extension sends demographics data to a server</description>
   <license>AGPL-3.0</license>
   <maintainer>

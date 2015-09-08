@@ -7,16 +7,23 @@ require_once 'CRM/Core/Form.php';
  *
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC43/QuickForm+Reference
  */
-class CRM_Client_Form_Settings extends CRM_Core_Form {
+class CRM_Metricclient_Form_Settings extends CRM_Core_Form {
   function buildQuickForm() {
 
     // add form elements
     $this->add(
-      'select', // field type
-      'favorite_color', // field name
-      'Favorite Color', // field label
-      $this->getColorOptions(), // list of options
+      'text', // field type
+      'metrics_reporting_url', // field name
+      ts('Metrics Reporting URL'), // field label
+      array("size" => 75),
       true // is required
+    );
+    $this->add(
+      'text', // field type
+      'metrics_site_name', // field name
+      ts('Metrics Site Name'), // field label
+      array("size" => 35),
+      true // is required,
     );
     $this->addButtons(array(
       array(
@@ -31,27 +38,25 @@ class CRM_Client_Form_Settings extends CRM_Core_Form {
     parent::buildQuickForm();
   }
 
-  function postProcess() {
-    $values = $this->exportValues();
-    $options = $this->getColorOptions();
-    CRM_Core_Session::setStatus(ts('You picked color "%1"', array(
-      1 => $options[$values['favorite_color']]
-    )));
-    parent::postProcess();
+  function setDefaultValues() {
+
+    $metricSettings = CRM_Core_BAO_Setting::getItem("metrics");
+
+    return $metricSettings;
   }
 
-  function getColorOptions() {
-    $options = array(
-      '' => ts('- select -'),
-      '#f00' => ts('Red'),
-      '#0f0' => ts('Green'),
-      '#00f' => ts('Blue'),
-      '#f0f' => ts('Purple'),
-    );
-    foreach (array('1','2','3','4','5','6','7','8','9','a','b','c','d','e') as $f) {
-      $options["#{$f}{$f}{$f}"] = ts('Grey (%1)', array(1 => $f));
+  function validate() {
+    if(strpos($this->_submitValues['metrics_reporting_url'], "https") === false) {
+      CRM_Core_Session::setStatus(ts("SSL Should be used when sending metrics."), "error");
+      return false;
     }
-    return $options;
+  }
+
+  function postProcess() {
+    $values = $this->exportValues();
+    CRM_Core_BAO_Setting::setItem($values['metrics_reporting_url'],"metrics", "metrics_reporting_url");
+    CRM_Core_BAO_Setting::setItem($values['metrics_site_name'],"metrics", "metrics_site_name");
+    parent::postProcess();
   }
 
   /**
