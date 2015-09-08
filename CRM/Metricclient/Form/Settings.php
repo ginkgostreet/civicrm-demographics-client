@@ -45,6 +45,13 @@ class CRM_Metricclient_Form_Settings extends CRM_Core_Form {
     return $metricSettings;
   }
 
+  function validate() {
+    if(strpos($this->_submitValues['metrics_reporting_url'], "https") === false) {
+      CRM_Core_Session::setStatus(ts("SSL Should be used when sending metrics."), "error");
+      return false;
+    }
+  }
+
   function postProcess() {
     $values = $this->exportValues();
     CRM_Core_BAO_Setting::setItem($values['metrics_reporting_url'],"metrics", "metrics_reporting_url");
