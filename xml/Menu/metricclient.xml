@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/metrics/settings</path>
+    <page_callback>CRM_Metricclient_Form_Settings</page_callback>
+    <title>Metrics Settings</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>

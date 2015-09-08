@@ -7,7 +7,7 @@ require_once 'CRM/Core/Form.php';
  *
  * @see http://wiki.civicrm.org/confluence/display/CRMDOC43/QuickForm+Reference
  */
-class CRM_Client_Form_Settings extends CRM_Core_Form {
+class CRM_Metricclient_Form_Settings extends CRM_Core_Form {
   function buildQuickForm() {
 
     // add form elements
