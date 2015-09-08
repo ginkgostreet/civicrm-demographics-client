@@ -136,3 +136,54 @@ function metricclient_civicrm_preProcess($formName, &$form) {
 }
 
  */
+
+/**
+ * implements hook metrics_collate
+ *
+ * This function is used for generating some basic metrics
+ * That should be useful to most and can be used as an example
+ *
+ * @param $data
+ */
+function metricclient_metrics_collate(&$data) {
+
+
+  /********[ Total Number of Contacts ] ********/
+  $sql = "SELECT COUNT(*) FROM `civicrm_contact` WHERE `is_deleted` = 0";
+  $total =& CRM_Core_DAO::singleValueQuery($sql);
+
+  $data[] = array("type" => "total_contacts", "data" => $total);
+
+
+  /********[ Contact Totals by Gender ] ********/
+  $sql = "SELECT COUNT(*) as `total`, `gender_id` FROM `civicrm_contact` GROUP BY `gender_id`";
+  $gender = CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'gender_id', array('localize' => TRUE));
+  $dao =& CRM_Core_DAO::executeQuery($sql);
+  $total = array();
+  while($dao->fetch()) {
+    if ($dao->gender_id == null) {
+      $total['none'] = $dao->total;
+    } else {
+      $total[ $gender[ $dao->gender_id ] ] = $dao->total;
+    }
+  }
+  $data[] = array("type" => "gender", "data" => $total);
+
+
+  /********[ Contacts with Phone ] ********/
+  $sql = "SELECT COUNT(*) FROM `civicrm_contact` WHERE id IN (SELECT contact_id FROM civicrm_phone WHERE `phone` IS NOT NULL) AND `is_deleted` = 0";
+  $total =& CRM_Core_DAO::singleValueQuery($sql);
+  $data[] = array("type" => "contacts_with_phone", "data" => $total);
+
+  /********[ Contacts with email ] ********/
+  $sql = "SELECT COUNT(*) FROM `civicrm_contact` WHERE id IN (SELECT contact_id FROM civicrm_email WHERE `email` IS NOT NULL) AND `is_deleted` = 0";
+  $total =& CRM_Core_DAO::singleValueQuery($sql);
+  $data[] = array("type" => "contacts_with_email", "data" => $total);
+
+  /********[ Contacts with address ] ********/
+  $sql = "SELECT COUNT(*) FROM `civicrm_contact` WHERE id IN (SELECT contact_id FROM civicrm_address WHERE `street_address` IS NOT NULL) AND `is_deleted` = 0";
+  $total =& CRM_Core_DAO::singleValueQuery($sql);
+  $data[] = array("type" => "contacts_with_address", "data" => $total);
+
+
+}
