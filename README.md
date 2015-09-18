@@ -10,13 +10,22 @@ hook_metrics_collate(&$data)
 
 $data is an array and all new metrics should be pushed into this array.
 Data entries should contain two keys, 'type' and 'data'.
-eg: $data[] = array("type" => "YouCustomMetric", "data" => "SomethingCool");
+eg: 
+```php
+$data[] = array("type" => "YouCustomMetric", "data" => "SomethingCool");
+```
 
 The data key can also be an array
-eg: $data[] = array("type" => "AnotherCustomMetric", "data" => array("cows" => "We have 25 cows", "chickens" => "We have 57 chickens", "total" => 82));
+eg: 
+```php
+$data[] = array("type" => "AnotherCustomMetric", "data" => array("cows" => "We have 25 cows", "chickens" => "We have 57 chickens", "total" => 82));
+```
 
 Data will be json stringified and stored in the data field within the metrics server.
-eg: {"cows": "We have 25 cows", "chickens": "We have 57 chickens", "total": 82}
+eg: 
+```
+{"cows": "We have 25 cows", "chickens": "We have 57 chickens", "total": 82}
+```
 
 ##Settings
 You can modify settings at civicrm/metrics/settings
