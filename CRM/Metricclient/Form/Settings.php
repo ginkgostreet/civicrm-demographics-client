@@ -19,11 +19,32 @@ class CRM_Metricclient_Form_Settings extends CRM_Core_Form {
       true // is required
     );
     $this->add(
-      'text', // field type
-      'metrics_site_name', // field name
-      ts('Metrics Site Name'), // field label
+      'text',
+      'metrics_site_name',
+      ts('Metrics Site Name'),
       array("size" => 35),
       true // is required,
+    );
+    $this->add(
+      'text',
+      'metrics_ca_path',
+      ts('SSL CA Path'),
+      array("size" => 75),
+      false
+    );
+    $this->add(
+      'checkbox',
+      'metrics_ignore_verify_peer',
+      ts('Skip Peer CA Validation'),
+      null,
+      false
+    );
+    $this->add(
+      'checkbox',
+      'metrics_ignore_verify_host',
+      ts('Skip SSL Host Validation'),
+      null,
+      false
     );
     $this->addButtons(array(
       array(
@@ -47,15 +68,25 @@ class CRM_Metricclient_Form_Settings extends CRM_Core_Form {
 
   function validate() {
     if(strpos($this->_submitValues['metrics_reporting_url'], "https") === false) {
-      CRM_Core_Session::setStatus(ts("SSL Should be used when sending metrics."), "error");
-      return false;
+      CRM_Core_Session::setStatus(ts("SSL Should be used when sending metrics."), "Error", "error");
+      //This should be false but for testing I'm not enforcing ssl.
+      return true;
     }
+    return true;
   }
 
   function postProcess() {
     $values = $this->exportValues();
     CRM_Core_BAO_Setting::setItem($values['metrics_reporting_url'],"metrics", "metrics_reporting_url");
     CRM_Core_BAO_Setting::setItem($values['metrics_site_name'],"metrics", "metrics_site_name");
+    CRM_Core_BAO_Setting::setItem($values['metrics_ca_path'],"metrics", "metrics_ca_path");
+
+    $peer = array_key_exists("metrics_ignore_verify_peer", $values) ? $values['metrics_ignore_verify_peer'] : 0;
+    CRM_Core_BAO_Setting::setItem($peer,"metrics", "metrics_ignore_verify_peer");
+    $host = array_key_exists("metrics_ignore_verify_host", $values) ? $values['metrics_ignore_verify_host'] : 0;
+    CRM_Core_BAO_Setting::setItem($host,"metrics", "metrics_ignore_verify_host");
+
+    CRM_Core_Session::setStatus(ts("Changed Saved"), "Saved", "success");
     parent::postProcess();
   }
 
