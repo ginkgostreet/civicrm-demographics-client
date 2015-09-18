@@ -1,7 +1,7 @@
 # civicrm-metrics-client
 
 ##API Functions:
-*api.metrics.collate*
+**api.metrics.collate**
 This extension creates a new API method that can be schedule as a job to periodically report metrics to a defined server
 
 ##Hooks: 
@@ -29,3 +29,13 @@ eg:
 
 ##Settings
 You can modify settings at civicrm/metrics/settings
+
+
+##Default Metrics
+This module comes packaged with 5 metrics
+
+- Total Number of Contacts
+- Contacts broken down by Gender
+- Percentage of contacts with an associated phone number
+- Percentage of contacts with an associated email address
+- Percentage of contacts with an associated address
