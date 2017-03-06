@@ -1,5 +1,9 @@
 # civicrm-metrics-client
 
+## Installation and Configuration
+Visit the settings page to set the server URL to send metrics to.
+Enable and configure the scheduled job to collate and send the metrics.
+
 ##API Functions:
 **api.metrics.collate**
 This extension creates a new API method that can be schedule as a job to periodically report metrics to a defined server
