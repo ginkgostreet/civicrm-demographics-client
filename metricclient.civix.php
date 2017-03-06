@@ -162,6 +162,7 @@ function _metricclient_civix_find_files($dir, $pattern) {
   }
   return $result;
 }
+
 /**
  * (Delegated) Implements hook_civicrm_managed().
  *
@@ -180,6 +181,22 @@ function _metricclient_civix_civicrm_managed(&$entities) {
       $entities[] = $e;
     }
   }
+
+  // Deploy a scheduled job to report metrics back to the server.
+  $entities[] = array(
+    'module' => 'com.ginkgostreet.metricclient',
+    'name' => 'report_metrics',
+    'entity' => 'Job',
+    'params' => array(
+      'version' => 3,
+      'name' => 'Report metrics',
+      'description' => 'Send metrics gathered on this site back to the metrics server.',
+      'run_frequency' => 'Daily',
+      'api_entity' => 'Metrics',
+      'api_action' => 'collate',
+    ),
+  );
+
 }
 
 /**
